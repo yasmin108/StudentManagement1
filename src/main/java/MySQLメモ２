@@ -1,0 +1,129 @@
+■MySQLメモ
+（一連のコマンドを一通り実行してみましょう。）
+
+//MySQL接続
+mysql -u root -p
+Enter password:****
+
+//データベース一覧表示
+show databases;
+//データベース作成
+create database studentmanagement_taimen2;
+//使用データベース指定
+use studentmanagement_taimen2;
+
+//テーブル作成
+create table students(
+student_id varchar(36) not null primary key,
+name varchar(50) not null,
+kana_name varchar(50) not null,
+nickname varchar(50),
+email varchar(50),
+area varchar(50),
+age int,
+sex varchar(10)
+) DEFAULT CHARSET=utf8;
+
+
+create table students_courses(
+course_id varchar(36) not null primary key,
+student_id varchar(36) not null,
+course_name varchar(50) not null,
+start_date timestamp,
+end_date timestamp
+) DEFAULT CHARSET=utf8;
+
+
+//テーブル一覧表示
+show tables;
+
+//レコード作成
+insert students(student_id, name, kana_name, nickname, email, area, age, sex) values('s0001','山田太郎', 'ヤマダタロウ','タロー', 't-yamada@gmail.com', '東京都新宿区', 20, '男性');
+insert students(student_id, name, kana_name, nickname, email, area, age, sex) values('s0002','田中次郎', 'タナカジロウ', 'ジロー','j-tanaka@gmail.com', '大阪府大阪市', 25, '男性');
+insert students(student_id, name, kana_name, nickname, email, area, age, sex) values('s0003','佐藤花子', 'サトウハナコ', 'ハナコ','h-satoh@gmail.com', '福岡県福岡市', 30, '女性');
+insert students(student_id, name, kana_name, nickname, email, area, age, sex) values('s0004','山本春子', 'ヤマモトハルコ', 'ハルコ','h-yamamoto@gmail.com', '愛知県名古屋市', 35, '女性');
+
+insert students_courses(course_id, student_id, course_name, start_date, end_date) values('c0001','s0001','Javaプログラミング講座１', '2025-04-01', '2025-06-30');
+insert students_courses(course_id, student_id, course_name, start_date, end_date) values('c0002','s0001','Javaプログラミング講座２', '2025-07-01', '2025-09-30');
+insert students_courses(course_id, student_id, course_name, start_date, end_date) values('c0003','s0002','Javaプログラミング講座１', '2025-04-01', '2025-06-30');
+insert students_courses(course_id, student_id, course_name, start_date, end_date) values('c0004','s0003','Javaプログラミング講座１', '2025-04-01', '2025-06-30');
+insert students_courses(course_id, student_id, course_name, start_date, end_date) values('c0005','s0004','Javaプログラミング講座２', '2025-07-01', '2025-09-30');
+
+//レコード検索
+select * from students;
+select * from students_courses;
+
+
+//テーブル定義
+describe students;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| student_id | varchar(36) | NO   | PRI | NULL    |       |
+| name       | varchar(50) | NO   |     | NULL    |       |
+| kana_name  | varchar(50) | NO   |     | NULL    |       |
+| nickname   | varchar(50) | YES  |     | NULL    |       |
+| email      | varchar(50) | YES  |     | NULL    |       |
+| area       | varchar(50) | YES  |     | NULL    |       |
+| age        | int         | YES  |     | NULL    |       |
+| sex        | varchar(10) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+
+describe students_courses;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| course_id   | varchar(36) | NO   | PRI | NULL    |       |
+| student_id  | varchar(36) | NO   |     | NULL    |       |
+| course_name | varchar(50) | NO   |     | NULL    |       |
+| start_date  | timestamp   | YES  |     | NULL    |       |
+| end_date    | timestamp   | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+
+//カラム変更（プライマリキーを外す　drop primary key）
+alter table students drop primary key;
+describe students;
+
+//カラム変更（NOT NULLを外す　modify( varchar(36)) ）
+alter table students modify column student_id varchar(36);
+describe students;
+
+//カラム変更（NOT NULLをつける　modify( varchar(36) NOT NULL)
+alter table students modify column student_id varchar(36) not null;
+describe students;
+
+//カラム変更（プライマリキーをつける　add primary key(***)）自動的にNOT NULLになる
+alter table students add primary key(student_id);
+describe students;
+
+
+//カラム変更（カラム名変更）
+alter table students rename column name to student_name;
+describe students;
+
+//カラム変更（カラム追加）
+alter table students add column memo varchar(100) after age;
+describe students;
+
+//カラム変更（カラム削除）
+alter table students drop column memo;
+describe students;
+
+
+
+
+//テーブルを空にする
+truncate students;
+truncate students_courses;
+//テーブルを削除する
+drop table students;
+drop table students_courses;
+//データベースを削除する
+drop database studentmanagement_taimen2;
+
+//データベース一覧表示
+show databases;
+
+
+//MySQL終了
+quit
